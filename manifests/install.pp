@@ -60,6 +60,16 @@ class docker::install (
           $pk_provider = undef
         }
       }
+     
+      if $::osfamily == 'Debian' {
+        exec { 'Install apt-transport-https package',
+        command => 'apt-get install -y apt-transport-https',
+        environment => 'HOME=/root',
+        path => '['/bin', '/usr/bin'],
+        timeout => 200
+        }
+      }
+
       case $docker::package_source {
         /docker-engine/ : {
           ensure_resource('package', 'docker', merge($docker_hash, {
